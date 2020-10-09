@@ -7,9 +7,10 @@ server.
 
 ## Wiring
 
+Connect the BME280 sensor using I2C, for example on a Wemos D1 mini:
+
 ![Wiring diagram](wiring.png)
 
-Connect the BME280 sensor using I2C.
 
 ## Build
 
