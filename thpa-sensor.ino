@@ -13,7 +13,7 @@
 
 
 Adafruit_BME280 bme;
-WiFiClient wifi_client;
+WiFiClientSecure wifi_client;
 PubSubClient client(wifi_client);
 
 
@@ -23,7 +23,6 @@ void setup_bme() {
 
     while (true);
   }
-
 }
 
 void setup_wifi() {
@@ -34,12 +33,13 @@ void setup_wifi() {
   Serial.print("Connecting to ");
   Serial.print(SECRET_WIFI_SSID);
 
-  // Wait while WiFi is not connected.
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(500);
     Serial.print(".");
   }
+
+  wifi_client.setFingerprint(SECRET_FINGERPRINT);
 
   Serial.println();
   Serial.print("Connected! IP address: ");
@@ -48,7 +48,8 @@ void setup_wifi() {
 
 void mqtt_reconnect() {
   while (!client.connected()) {
-    if (client.connect(SECRET_MQTT_CLIENT_ID)) {
+    Serial.println("Connecting to MQTT server.");
+    if (client.connect(SECRET_MQTT_CLIENT_ID, SECRET_MQTT_USER, SECRET_MQTT_PASSWORD)) {
       Serial.println("Connected to MQTT server.");
     } else {
       delay(5000);
@@ -113,5 +114,6 @@ void loop() {
   client.loop();
 
   send_data(temperature, humidity, pressure, altitude);
+
   delay(5000);
 }
